@@ -5,7 +5,7 @@ services:
   - type: web
     name: api-gateway
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend/api-gateway
     plan: free
     healthCheckPath: /health
@@ -19,7 +19,7 @@ services:
   - type: web
     name: frontend
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./frontend
     plan: free
     envVars:
@@ -59,7 +59,7 @@ services:
   - type: pserv
     name: user-service
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend/services/user-service
     plan: free
     envVars:
@@ -89,7 +89,7 @@ services:
   - type: pserv
     name: product-catalog-service
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend/services/product-catalog-service
     plan: free
     envVars:
@@ -119,7 +119,7 @@ services:
   - type: pserv
     name: shopping-cart-service
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend/services/shopping-cart-service
     plan: free
     envVars:
@@ -159,7 +159,7 @@ services:
   - type: pserv
     name: order-service
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend/services/order-service
     plan: free
     envVars:
@@ -189,7 +189,7 @@ services:
   - type: pserv
     name: payment-service
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend/services/payment-service
     plan: free
     envVars:
@@ -219,7 +219,7 @@ services:
   - type: pserv
     name: notification-service
     runtime: docker
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend/services/notification-service
     plan: free
     envVars:
