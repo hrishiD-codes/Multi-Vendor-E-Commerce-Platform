@@ -1,0 +1,261 @@
+services:
+  # ───────────────────────────────────────────────────────────────────────────
+  # API Gateway (Public Entry Point)
+  # ───────────────────────────────────────────────────────────────────────────
+  - type: web
+    name: api-gateway
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./backend/api-gateway
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 80
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Frontend (Next.js)
+  # ───────────────────────────────────────────────────────────────────────────
+  - type: web
+    name: frontend
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./frontend
+    plan: free
+    envVars:
+      - key: NEXTAUTH_URL
+        value: https://frontend.onrender.com # Placeholder: Update with your actual URL
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NEXT_PUBLIC_USER_SERVICE_URL
+        fromService:
+          type: web
+          name: api-gateway
+          property: url
+      - key: NEXT_PUBLIC_PRODUCT_SERVICE_URL
+        fromService:
+          type: web
+          name: api-gateway
+          property: url
+      - key: NEXT_PUBLIC_CART_SERVICE_URL
+        fromService:
+          type: web
+          name: api-gateway
+          property: url
+      - key: NEXT_PUBLIC_ORDER_SERVICE_URL
+        fromService:
+          type: web
+          name: api-gateway
+          property: url
+      - key: NEXT_PUBLIC_PAYMENT_SERVICE_URL
+        fromService:
+          type: web
+          name: api-gateway
+          property: url
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Backend Microservices (Private Services)
+  # ───────────────────────────────────────────────────────────────────────────
+  - type: pserv
+    name: user-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./backend/services/user-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: DB_HOST
+        fromDatabase:
+          name: ecommerce-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: ecommerce-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: ecommerce-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: ecommerce-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ecommerce-db
+          property: password
+
+  - type: pserv
+    name: product-catalog-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./backend/services/product-catalog-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8002
+      - key: DB_HOST
+        fromDatabase:
+          name: ecommerce-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: ecommerce-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: ecommerce-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: ecommerce-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ecommerce-db
+          property: password
+
+  - type: pserv
+    name: shopping-cart-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./backend/services/shopping-cart-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8003
+      - key: DB_HOST
+        fromDatabase:
+          name: ecommerce-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: ecommerce-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: ecommerce-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: ecommerce-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ecommerce-db
+          property: password
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: ecommerce-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: keyvalue
+          name: ecommerce-redis
+          property: port
+
+  - type: pserv
+    name: order-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./backend/services/order-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8004
+      - key: DB_HOST
+        fromDatabase:
+          name: ecommerce-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: ecommerce-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: ecommerce-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: ecommerce-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ecommerce-db
+          property: password
+
+  - type: pserv
+    name: payment-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./backend/services/payment-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8005
+      - key: DB_HOST
+        fromDatabase:
+          name: ecommerce-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: ecommerce-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: ecommerce-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: ecommerce-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ecommerce-db
+          property: password
+
+  - type: pserv
+    name: notification-service
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./backend/services/notification-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8006
+      - key: DB_HOST
+        fromDatabase:
+          name: ecommerce-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: ecommerce-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: ecommerce-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: ecommerce-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ecommerce-db
+          property: password
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Shared Infrastructure (Managed Redis)
+  # ───────────────────────────────────────────────────────────────────────────
+  - type: keyvalue
+    name: ecommerce-redis
+    plan: free
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Managed PostgreSQL
+# ─────────────────────────────────────────────────────────────────────────────
+databases:
+  - name: ecommerce-db
+    plan: free
