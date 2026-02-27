@@ -55,6 +55,11 @@ services:
           type: web
           name: api-gateway
           property: host
+      - key: NEXT_PUBLIC_API_GATEWAY_URL
+        fromService:
+          type: web
+          name: api-gateway
+          property: host
 
   # ───────────────────────────────────────────────────────────────────────────
   # Backend Microservices (Private Services)
@@ -89,6 +94,10 @@ services:
         fromDatabase:
           name: ecommerce-db
           property: password
+      - key: APP_URL
+        value: https://user-service-mcpt.onrender.com
+      - key: FRONTEND_URL
+        value: https://squaremart.vercel.app
 
   - type: web
     name: product-catalog-service
@@ -120,6 +129,8 @@ services:
         fromDatabase:
           name: ecommerce-db
           property: password
+      - key: APP_URL
+        value: https://product-catalog-service-ok51.onrender.com
 
   - type: web
     name: shopping-cart-service
@@ -151,6 +162,8 @@ services:
         fromDatabase:
           name: ecommerce-db
           property: password
+      - key: APP_URL
+        value: https://shopping-cart-service-tmz6.onrender.com
       - key: REDIS_HOST
         fromService:
           type: keyvalue
@@ -192,6 +205,8 @@ services:
         fromDatabase:
           name: ecommerce-db
           property: password
+      - key: APP_URL
+        value: https://order-service-qsy5.onrender.com
 
   - type: web
     name: payment-service

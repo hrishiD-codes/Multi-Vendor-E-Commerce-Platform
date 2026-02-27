@@ -5,7 +5,7 @@ import axios from "axios";
  */
 const paymentAxios = axios.create({
   baseURL:
-    process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL || "http://localhost:8005",
+    process.env.NEXT_PUBLIC_API_GATEWAY_URL || "http://localhost",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
