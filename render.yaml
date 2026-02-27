@@ -22,7 +22,10 @@ services:
     dockerfilePath: frontend/Dockerfile
     dockerContext: ./frontend
     plan: free
+    healthCheckPath: /
     envVars:
+      - key: PORT
+        value: 3000
       - key: NEXTAUTH_URL
         value: https://frontend.onrender.com # Placeholder: Update with your actual URL
       - key: NEXTAUTH_SECRET
