@@ -5,8 +5,8 @@ services:
   - type: web
     name: api-gateway
     runtime: docker
-    dockerFilePath: ./backend/api-gateway/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./backend/api-gateway
     plan: free
     healthCheckPath: /health
     envVars:
@@ -19,37 +19,39 @@ services:
   - type: web
     name: frontend
     runtime: docker
-    dockerFilePath: ./frontend/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./frontend
     plan: free
     envVars:
       - key: NEXTAUTH_URL
-        value: https://frontend.onrender.com # Placeholder, update after deployment
+        value: https://frontend.onrender.com # Placeholder: Update with your actual URL
+      - key: NEXTAUTH_SECRET
+        generateValue: true
       - key: NEXT_PUBLIC_USER_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: host
+          property: url
       - key: NEXT_PUBLIC_PRODUCT_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: host
+          property: url
       - key: NEXT_PUBLIC_CART_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: host
+          property: url
       - key: NEXT_PUBLIC_ORDER_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: host
+          property: url
       - key: NEXT_PUBLIC_PAYMENT_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: host
+          property: url
 
   # ───────────────────────────────────────────────────────────────────────────
   # Backend Microservices (Private Services)
@@ -57,10 +59,12 @@ services:
   - type: pserv
     name: user-service
     runtime: docker
-    dockerFilePath: ./backend/services/user-service/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./backend/services/user-service
     plan: free
     envVars:
+      - key: PORT
+        value: 8000
       - key: DB_HOST
         fromDatabase:
           name: ecommerce-db
@@ -85,10 +89,12 @@ services:
   - type: pserv
     name: product-catalog-service
     runtime: docker
-    dockerFilePath: ./backend/services/product-catalog-service/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./backend/services/product-catalog-service
     plan: free
     envVars:
+      - key: PORT
+        value: 8002
       - key: DB_HOST
         fromDatabase:
           name: ecommerce-db
@@ -113,10 +119,12 @@ services:
   - type: pserv
     name: shopping-cart-service
     runtime: docker
-    dockerFilePath: ./backend/services/shopping-cart-service/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./backend/services/shopping-cart-service
     plan: free
     envVars:
+      - key: PORT
+        value: 8003
       - key: DB_HOST
         fromDatabase:
           name: ecommerce-db
@@ -151,10 +159,12 @@ services:
   - type: pserv
     name: order-service
     runtime: docker
-    dockerFilePath: ./backend/services/order-service/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./backend/services/order-service
     plan: free
     envVars:
+      - key: PORT
+        value: 8004
       - key: DB_HOST
         fromDatabase:
           name: ecommerce-db
@@ -179,10 +189,12 @@ services:
   - type: pserv
     name: payment-service
     runtime: docker
-    dockerFilePath: ./backend/services/payment-service/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./backend/services/payment-service
     plan: free
     envVars:
+      - key: PORT
+        value: 8005
       - key: DB_HOST
         fromDatabase:
           name: ecommerce-db
@@ -207,10 +219,12 @@ services:
   - type: pserv
     name: notification-service
     runtime: docker
-    dockerFilePath: ./backend/services/notification-service/Dockerfile
-    dockerContext: .
+    dockerFilePath: Dockerfile
+    dockerContext: ./backend/services/notification-service
     plan: free
     envVars:
+      - key: PORT
+        value: 8006
       - key: DB_HOST
         fromDatabase:
           name: ecommerce-db
