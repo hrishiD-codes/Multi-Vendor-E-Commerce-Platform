@@ -31,27 +31,27 @@ services:
         fromService:
           type: web
           name: api-gateway
-          property: url
+          property: host
       - key: NEXT_PUBLIC_PRODUCT_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: url
+          property: host
       - key: NEXT_PUBLIC_CART_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: url
+          property: host
       - key: NEXT_PUBLIC_ORDER_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: url
+          property: host
       - key: NEXT_PUBLIC_PAYMENT_SERVICE_URL
         fromService:
           type: web
           name: api-gateway
-          property: url
+          property: host
 
   # ───────────────────────────────────────────────────────────────────────────
   # Backend Microservices (Private Services)
@@ -252,6 +252,9 @@ services:
   - type: keyvalue
     name: ecommerce-redis
     plan: free
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: Allow all
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Managed PostgreSQL
