@@ -14,54 +14,6 @@ services:
         value: 80
 
   # ───────────────────────────────────────────────────────────────────────────
-  # Frontend (Next.js)
-  # ───────────────────────────────────────────────────────────────────────────
-  - type: web
-    name: frontend
-    runtime: docker
-    dockerfilePath: frontend/Dockerfile
-    dockerContext: ./frontend
-    plan: free
-    healthCheckPath: /
-    envVars:
-      - key: PORT
-        value: 3000
-      - key: NEXTAUTH_URL
-        value: https://frontend.onrender.com # Placeholder: Update with your actual URL
-      - key: NEXTAUTH_SECRET
-        generateValue: true
-      - key: NEXT_PUBLIC_USER_SERVICE_URL
-        fromService:
-          type: web
-          name: api-gateway
-          property: host
-      - key: NEXT_PUBLIC_PRODUCT_SERVICE_URL
-        fromService:
-          type: web
-          name: api-gateway
-          property: host
-      - key: NEXT_PUBLIC_CART_SERVICE_URL
-        fromService:
-          type: web
-          name: api-gateway
-          property: host
-      - key: NEXT_PUBLIC_ORDER_SERVICE_URL
-        fromService:
-          type: web
-          name: api-gateway
-          property: host
-      - key: NEXT_PUBLIC_PAYMENT_SERVICE_URL
-        fromService:
-          type: web
-          name: api-gateway
-          property: host
-      - key: NEXT_PUBLIC_API_GATEWAY_URL
-        fromService:
-          type: web
-          name: api-gateway
-          property: host
-
-  # ───────────────────────────────────────────────────────────────────────────
   # Backend Microservices (Private Services)
   # ───────────────────────────────────────────────────────────────────────────
   - type: web
@@ -279,10 +231,3 @@ services:
     ipAllowList:
       - source: 0.0.0.0/0
         description: Allow all
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Managed PostgreSQL
-# ─────────────────────────────────────────────────────────────────────────────
-databases:
-  - name: ecommerce-db
-    plan: free
