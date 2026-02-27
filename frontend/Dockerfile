@@ -8,6 +8,7 @@ RUN npm ci
 
 # Copy source and build
 COPY . .
+RUN mkdir -p public
 
 # Build-time env vars (overridden at runtime via docker-compose environment)
 ARG NEXT_PUBLIC_USER_SERVICE_URL=http://localhost
