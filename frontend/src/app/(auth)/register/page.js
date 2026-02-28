@@ -16,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { register } from "@/lib/api/authApi";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -53,14 +53,41 @@ export default function RegisterPage() {
     setErrors({});
     setLoading(true);
     try {
-      await register(form);
-      toast.success("Account created! Please sign in.");
-      router.push("/login");
+      // ✅ POST to local Next.js server route (proxy) — avoids browser → API Gateway CORS issues
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const msg = data?.message || "Registration failed.";
+        const fieldErrors = data?.errors || {};
+        setErrors(fieldErrors);
+        toast.error(msg);
+        return;
+      }
+
+      toast.success("Account created! Signing you in…");
+
+      // Auto sign-in after registration
+      const result = await signIn("credentials", {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        // Registration succeeded but auto-login failed — redirect to login page
+        router.push("/login");
+      } else {
+        router.push("/profile");
+      }
     } catch (error) {
-      const msg = error.response?.data?.message || "Registration failed.";
-      const fieldErrors = error.response?.data?.errors || {};
-      setErrors(fieldErrors);
-      toast.error(msg);
+      toast.error("Something went wrong. Please try again.");
+
     } finally {
       setLoading(false);
     }
