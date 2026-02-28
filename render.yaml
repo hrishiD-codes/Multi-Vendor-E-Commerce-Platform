@@ -27,25 +27,10 @@ services:
       - key: PORT
         value: 8000
       - key: DB_HOST
-        fromDatabase:
-          name: ecommerce-db
-          property: host
       - key: DB_PORT
-        fromDatabase:
-          name: ecommerce-db
-          property: port
       - key: DB_DATABASE
-        fromDatabase:
-          name: ecommerce-db
-          property: database
       - key: DB_USERNAME
-        fromDatabase:
-          name: ecommerce-db
-          property: user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ecommerce-db
-          property: password
       - key: APP_URL
         value: https://user-service-mcpt.onrender.com
       - key: FRONTEND_URL
@@ -62,25 +47,10 @@ services:
       - key: PORT
         value: 8002
       - key: DB_HOST
-        fromDatabase:
-          name: ecommerce-db
-          property: host
       - key: DB_PORT
-        fromDatabase:
-          name: ecommerce-db
-          property: port
       - key: DB_DATABASE
-        fromDatabase:
-          name: ecommerce-db
-          property: database
       - key: DB_USERNAME
-        fromDatabase:
-          name: ecommerce-db
-          property: user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ecommerce-db
-          property: password
       - key: APP_URL
         value: https://product-catalog-service-ok51.onrender.com
 
@@ -95,25 +65,10 @@ services:
       - key: PORT
         value: 8003
       - key: DB_HOST
-        fromDatabase:
-          name: ecommerce-db
-          property: host
       - key: DB_PORT
-        fromDatabase:
-          name: ecommerce-db
-          property: port
       - key: DB_DATABASE
-        fromDatabase:
-          name: ecommerce-db
-          property: database
       - key: DB_USERNAME
-        fromDatabase:
-          name: ecommerce-db
-          property: user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ecommerce-db
-          property: password
       - key: APP_URL
         value: https://shopping-cart-service-tmz6.onrender.com
       - key: REDIS_HOST
@@ -138,25 +93,10 @@ services:
       - key: PORT
         value: 8004
       - key: DB_HOST
-        fromDatabase:
-          name: ecommerce-db
-          property: host
       - key: DB_PORT
-        fromDatabase:
-          name: ecommerce-db
-          property: port
       - key: DB_DATABASE
-        fromDatabase:
-          name: ecommerce-db
-          property: database
       - key: DB_USERNAME
-        fromDatabase:
-          name: ecommerce-db
-          property: user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ecommerce-db
-          property: password
       - key: APP_URL
         value: https://order-service-qsy5.onrender.com
 
@@ -171,25 +111,10 @@ services:
       - key: PORT
         value: 8005
       - key: DB_HOST
-        fromDatabase:
-          name: ecommerce-db
-          property: host
       - key: DB_PORT
-        fromDatabase:
-          name: ecommerce-db
-          property: port
       - key: DB_DATABASE
-        fromDatabase:
-          name: ecommerce-db
-          property: database
       - key: DB_USERNAME
-        fromDatabase:
-          name: ecommerce-db
-          property: user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ecommerce-db
-          property: password
 
   - type: web
     name: notification-service
@@ -202,25 +127,10 @@ services:
       - key: PORT
         value: 8006
       - key: DB_HOST
-        fromDatabase:
-          name: ecommerce-db
-          property: host
       - key: DB_PORT
-        fromDatabase:
-          name: ecommerce-db
-          property: port
       - key: DB_DATABASE
-        fromDatabase:
-          name: ecommerce-db
-          property: database
       - key: DB_USERNAME
-        fromDatabase:
-          name: ecommerce-db
-          property: user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ecommerce-db
-          property: password
 
   # ───────────────────────────────────────────────────────────────────────────
   # Shared Infrastructure (Managed Redis)
