@@ -13,7 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->use([
-            \Illuminate\Http\Middleware\HandleCors::class,
+            // \Illuminate\Http\Middleware\HandleCors::class,
+            \App\Http\Middleware\CheckGatewaySecret::class,
         ]);
         // statefulApi() removed — this API uses Bearer token auth (Sanctum tokens),
         // not cookie/session SPA auth. statefulApi() was enabling CSRF which caused 419.

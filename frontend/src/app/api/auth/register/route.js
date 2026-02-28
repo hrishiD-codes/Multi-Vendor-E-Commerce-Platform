@@ -33,6 +33,8 @@ export async function POST(request) {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
+      // Identification card for microservices to verify Gateway origin
+      "X-Gateway-Secret": "ecommerce-internal-secret-2024",
     },
     body: JSON.stringify(body),
   };
