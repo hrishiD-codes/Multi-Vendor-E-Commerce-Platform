@@ -1,10 +1,12 @@
 import axios from "axios";
 
 /**
- * Axios instance for Order Service (port 8004)
+ * Axios instance for Order Service.
+ * baseURL is empty so all requests go to the Next.js server (same origin),
+ * which proxies them server-side to the API Gateway — no CORS.
  */
 const orderAxios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_GATEWAY_URL || "http://localhost",
+  baseURL: "",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

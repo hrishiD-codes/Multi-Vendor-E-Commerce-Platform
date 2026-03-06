@@ -1,11 +1,12 @@
 import axios from "axios";
 
 /**
- * Axios instance for Payment Service (port 8005)
+ * Axios instance for Payment Service.
+ * baseURL is empty so all requests go to the Next.js server (same origin),
+ * which proxies them server-side to the API Gateway — no CORS.
  */
 const paymentAxios = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_GATEWAY_URL || "http://localhost",
+  baseURL: "",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
