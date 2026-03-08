@@ -52,6 +52,8 @@ services:
 
   # ───────────────────────────────────────────────────────────────────────────
   # Microservices
+  # PORT is explicitly set here for local dev so `php artisan serve` uses the
+  # original local ports (8000-8006) instead of Render's default (10000).
   # ───────────────────────────────────────────────────────────────────────────
 
   user-service:
@@ -61,6 +63,8 @@ services:
     container_name: ecommerce_user_service
     env_file:
       - .env
+    environment:
+      PORT: "8000"
     ports:
       - "8001:8000"
     # depends_on:
@@ -77,6 +81,8 @@ services:
     container_name: ecommerce_product_service
     env_file:
       - .env
+    environment:
+      PORT: "8002"
     ports:
       - "8002:8002"
     # depends_on:
@@ -93,6 +99,8 @@ services:
     container_name: ecommerce_cart_service
     env_file:
       - .env
+    environment:
+      PORT: "8003"
     ports:
       - "8003:8003"
     # depends_on:
@@ -111,6 +119,8 @@ services:
     container_name: ecommerce_order_service
     env_file:
       - .env
+    environment:
+      PORT: "8004"
     ports:
       - "8004:8004"
     # depends_on:
@@ -127,6 +137,8 @@ services:
     container_name: ecommerce_payment_service
     env_file:
       - .env
+    environment:
+      PORT: "8005"
     ports:
       - "8005:8005"
     # depends_on:
@@ -143,6 +155,8 @@ services:
     container_name: ecommerce_notification_service
     env_file:
       - .env
+    environment:
+      PORT: "8006"
     ports:
       - "8006:8006"
     # depends_on:
@@ -182,6 +196,9 @@ services:
 
   # ───────────────────────────────────────────────────────────────────────────
   # API Gateway (NGINX)
+  # PORT=80 tells nginx (via envsubst) to listen on 80 locally.
+  # On Render, PORT=10000 is injected automatically.
+  # Service URL vars are used by envsubst to build upstream URLs.
   # ───────────────────────────────────────────────────────────────────────────
 
   api-gateway:
@@ -189,6 +206,15 @@ services:
       context: ./backend/api-gateway
       dockerfile: Dockerfile
     container_name: ecommerce_gateway
+    environment:
+      PORT: "80"
+      # Local docker-compose service URLs (docker internal DNS)
+      USER_SERVICE_URL: "http://user-service:8000"
+      PRODUCT_SERVICE_URL: "http://product-catalog-service:8002"
+      CART_SERVICE_URL: "http://shopping-cart-service:8003"
+      ORDER_SERVICE_URL: "http://order-service:8004"
+      PAYMENT_SERVICE_URL: "http://payment-service:8005"
+      NOTIFICATION_SERVICE_URL: "http://notification-service:8006"
     ports:
       - "80:80"
     depends_on:
@@ -200,8 +226,4 @@ services:
       - notification-service
     networks:
       - ecommerce
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     restart: unless-stopped
-    volumes:
-      - ./backend/api-gateway/conf.d:/etc/nginx/conf.d:ro

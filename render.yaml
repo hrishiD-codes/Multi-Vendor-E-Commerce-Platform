@@ -10,8 +10,20 @@ services:
     plan: free
     healthCheckPath: /health
     envVars:
-      - key: PORT
-        value: 80
+      # Render injects PORT=10000 automatically — do NOT override it here
+      # Nginx will listen on $PORT via envsubst in the startup script
+      - key: USER_SERVICE_URL
+        value: "https://user-service-mcpt.onrender.com"
+      - key: PRODUCT_SERVICE_URL
+        value: "https://product-catalog-service-ok51.onrender.com"
+      - key: CART_SERVICE_URL
+        value: "https://shopping-cart-service-tmz6.onrender.com"
+      - key: ORDER_SERVICE_URL
+        value: "https://order-service-qsy5.onrender.com"
+      - key: PAYMENT_SERVICE_URL
+        value: "https://payment-service-4iuw.onrender.com"
+      - key: NOTIFICATION_SERVICE_URL
+        value: "https://notification-service-fwil.onrender.com"
 
   # ───────────────────────────────────────────────────────────────────────────
   # Backend Microservices (Private Services)
@@ -24,8 +36,7 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 8000
+      # PORT is injected by Render automatically (10000) — do NOT set it here
       - key: DB_HOST
         value: ""
       - key: DB_PORT
@@ -49,8 +60,6 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 8002
       - key: DB_HOST
         value: ""
       - key: DB_PORT
@@ -72,8 +81,6 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 8003
       - key: DB_HOST
         value: ""
       - key: DB_PORT
@@ -105,8 +112,6 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 8004
       - key: DB_HOST
         value: ""
       - key: DB_PORT
@@ -128,8 +133,6 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 8005
       - key: DB_HOST
         value: ""
       - key: DB_PORT
@@ -151,8 +154,6 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 8006
       - key: DB_HOST
         value: ""
       - key: DB_PORT
