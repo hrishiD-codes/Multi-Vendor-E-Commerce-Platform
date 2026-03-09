@@ -20,6 +20,7 @@ RUN composer dump-autoload --optimize \
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-EXPOSE 8003
+EXPOSE 10000
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8003"]
+# PORT is injected by Render (default 10000); falls back to 8003 for local docker-compose
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8003}"]

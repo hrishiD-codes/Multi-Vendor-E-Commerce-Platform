@@ -2,11 +2,18 @@ import axiosInstance from "@/lib/axios";
 
 /**
  * Register a new user
- * POST /api/auth/register
+ * POST /api/auth/register (local proxy)
  */
 export async function register(data) {
-  const response = await axiosInstance.post("/api/auth/register", data);
-  return response.data;
+  // Use local server-side proxy to avoid CORS and handle Gateway Secret
+  const response = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const result = await response.json();
+  if (!response.ok) throw result;
+  return result;
 }
 
 /**
@@ -20,26 +27,36 @@ export async function login(data) {
 
 /**
  * Logout (requires token)
- * POST /api/auth/logout
+ * POST /api/auth/logout (local proxy)
  */
 export async function logout(token) {
-  const response = await axiosInstance.post(
-    "/api/auth/logout",
-    {},
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return response.data;
+  const response = await fetch("/api/auth/logout", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const result = await response.json();
+  if (!response.ok) throw result;
+  return result;
 }
 
 /**
  * Get current authenticated user
- * GET /api/auth/me
+ * GET /api/auth/me (local proxy)
  */
 export async function me(token) {
-  const response = await axiosInstance.get("/api/auth/me", {
-    headers: { Authorization: `Bearer ${token}` },
+  const response = await fetch("/api/auth/me", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
-  return response.data;
+  const result = await response.json();
+  if (!response.ok) throw result;
+  return result;
 }
 
 /**
