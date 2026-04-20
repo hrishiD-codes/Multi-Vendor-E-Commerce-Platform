@@ -10,7 +10,7 @@ export async function middleware(request) {
   // Redirect logged-in users away from auth pages
   const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
   if (token && authRoutes.some((r) => pathname.startsWith(r))) {
-    return NextResponse.redirect(new URL("/profile", request.url));
+    return NextResponse.redirect(new URL("/products", request.url));
   }
 
   // Protect dashboard routes — must be logged in
@@ -23,7 +23,7 @@ export async function middleware(request) {
 
   // Protect admin routes — must be admin role
   if (pathname.startsWith("/admin") && token?.role !== "admin") {
-    return NextResponse.redirect(new URL("/profile", request.url));
+    return NextResponse.redirect(new URL("/products", request.url));
   }
 
   return NextResponse.next();

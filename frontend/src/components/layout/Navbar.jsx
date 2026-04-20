@@ -67,6 +67,16 @@ export default function Navbar() {
 
           {/* User Menu / Auth Buttons */}
           <div className="flex items-center gap-3">
+            {session && (
+              <Link
+                href="/cart"
+                className="p-2 text-muted-foreground hover:text-foreground relative group transition-colors"
+                title="Your Cart"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {/* Optional: Add badge here if cart count is available in a global state or hook */}
+              </Link>
+            )}
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

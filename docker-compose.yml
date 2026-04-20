@@ -18,42 +18,42 @@ services:
   # Shared Infrastructure
   # ───────────────────────────────────────────────────────────────────────────
 
-  # postgres:
-  #   image: postgres:15-alpine
-  #   container_name: ecommerce_postgres
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   networks:
-  #     - ecommerce
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecommerce_postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # redis:
-  #   image: redis:7-alpine
-  #   container_name: ecommerce_redis
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - redis_data:/data
-  #   networks:
-  #     - ecommerce
-  #   healthcheck:
-  #     test: ["CMD", "redis-cli", "ping"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+  redis:
+    image: redis:7-alpine
+    container_name: ecommerce_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ecommerce
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # ───────────────────────────────────────────────────────────────────────────
   # Microservices
-  # PORT is explicitly set here for local dev so `php artisan serve` uses the
-  # original local ports (8000-8006) instead of Render's default (10000).
   # ───────────────────────────────────────────────────────────────────────────
 
   user-service:
@@ -67,12 +67,12 @@ services:
       PORT: "8000"
     ports:
       - "8001:8000"
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - ecommerce
-    restart: unless-stopped
+    restart: always
 
   product-catalog-service:
     build:
@@ -85,12 +85,12 @@ services:
       PORT: "8002"
     ports:
       - "8002:8002"
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - ecommerce
-    restart: unless-stopped
+    restart: always
 
   shopping-cart-service:
     build:
@@ -103,14 +103,14 @@ services:
       PORT: "8003"
     ports:
       - "8003:8003"
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
-    # redis:
-    #   condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - ecommerce
-    restart: unless-stopped
+    restart: always
 
   order-service:
     build:
@@ -123,12 +123,12 @@ services:
       PORT: "8004"
     ports:
       - "8004:8004"
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - ecommerce
-    restart: unless-stopped
+    restart: always
 
   payment-service:
     build:
@@ -141,12 +141,12 @@ services:
       PORT: "8005"
     ports:
       - "8005:8005"
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - ecommerce
-    restart: unless-stopped
+    restart: always
 
   notification-service:
     build:
@@ -159,46 +159,43 @@ services:
       PORT: "8006"
     ports:
       - "8006:8006"
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - ecommerce
-    restart: unless-stopped
+    restart: always
 
-  # # ───────────────────────────────────────────────────────────────────────────
-  # # Frontend (Next.js)
-  # # ───────────────────────────────────────────────────────────────────────────
+  # ───────────────────────────────────────────────────────────────────────────
+  # Frontend (Next.js)
+  # ───────────────────────────────────────────────────────────────────────────
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #     args:
-  #       NEXT_PUBLIC_USER_SERVICE_URL: ${NEXT_PUBLIC_USER_SERVICE_URL:-http://localhost}
-  #       NEXT_PUBLIC_PRODUCT_SERVICE_URL: ${NEXT_PUBLIC_PRODUCT_SERVICE_URL:-http://localhost}
-  #       NEXT_PUBLIC_CART_SERVICE_URL: ${NEXT_PUBLIC_CART_SERVICE_URL:-http://localhost}
-  #       NEXT_PUBLIC_ORDER_SERVICE_URL: ${NEXT_PUBLIC_ORDER_SERVICE_URL:-http://localhost}
-  #       NEXT_PUBLIC_PAYMENT_SERVICE_URL: ${NEXT_PUBLIC_PAYMENT_SERVICE_URL:-http://localhost}
-  #       NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
-  #       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-changemechangemechangemechangemechangeme}
-  #   container_name: ecommerce_frontend
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - api-gateway
-  #   networks:
-  #     - ecommerce
-  #   restart: unless-stopped
-
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_USER_SERVICE_URL: ${NEXT_PUBLIC_USER_SERVICE_URL:-http://localhost}
+        NEXT_PUBLIC_PRODUCT_SERVICE_URL: ${NEXT_PUBLIC_PRODUCT_SERVICE_URL:-http://localhost}
+        NEXT_PUBLIC_CART_SERVICE_URL: ${NEXT_PUBLIC_CART_SERVICE_URL:-http://localhost}
+        NEXT_PUBLIC_ORDER_SERVICE_URL: ${NEXT_PUBLIC_ORDER_SERVICE_URL:-http://localhost}
+        NEXT_PUBLIC_PAYMENT_SERVICE_URL: ${NEXT_PUBLIC_PAYMENT_SERVICE_URL:-http://localhost}
+        NEXT_PUBLIC_NOTIFICATION_SERVICE_URL: ${NEXT_PUBLIC_NOTIFICATION_SERVICE_URL:-http://localhost}
+        NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-changemechangemechangemechangemechangeme}
+    container_name: ecommerce_frontend
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      - ecommerce
+    restart: always
 
   # ───────────────────────────────────────────────────────────────────────────
   # API Gateway (NGINX)
-  # PORT=80 tells nginx (via envsubst) to listen on 80 locally.
-  # On Render, PORT=10000 is injected automatically.
-  # Service URL vars are used by envsubst to build upstream URLs.
   # ───────────────────────────────────────────────────────────────────────────
 
   api-gateway:
@@ -208,7 +205,6 @@ services:
     container_name: ecommerce_gateway
     environment:
       PORT: "80"
-      # Local docker-compose service URLs (docker internal DNS)
       USER_SERVICE_URL: "http://user-service:8000"
       PRODUCT_SERVICE_URL: "http://product-catalog-service:8002"
       CART_SERVICE_URL: "http://shopping-cart-service:8003"
@@ -226,4 +222,5 @@ services:
       - notification-service
     networks:
       - ecommerce
-    restart: unless-stopped
+    restart: always
+

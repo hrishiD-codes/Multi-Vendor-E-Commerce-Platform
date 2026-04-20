@@ -83,7 +83,7 @@ export default function RegisterPage() {
         // Registration succeeded but auto-login failed — redirect to login page
         router.push("/login");
       } else {
-        router.push("/profile");
+        router.push("/products");
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");

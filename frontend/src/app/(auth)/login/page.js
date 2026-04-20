@@ -53,7 +53,7 @@ export default function LoginPage() {
         toast.error(result.error || "Invalid credentials.");
       } else {
         toast.success("Welcome back!");
-        router.push("/profile");
+        router.push("/products");
       }
     } catch {
       toast.error("Something went wrong. Please try again.");

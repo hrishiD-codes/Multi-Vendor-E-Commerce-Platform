@@ -23,4 +23,4 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
 EXPOSE 10000
 
 # PORT is injected by Render (default 10000); falls back to 8006 for local docker-compose
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8006}"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --class=NotificationTemplateSeeder --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8006}"]
