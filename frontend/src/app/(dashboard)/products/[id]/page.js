@@ -5,15 +5,41 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ShoppingCart, Package, Tag, AlertTriangle, CheckCircle } from "lucide-react";
 import { getProduct, getProducts } from "@/lib/api/productApi";
+import { addToCart } from "@/lib/api/cartApi";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
   const router = useRouter();
+  const { data: session } = useSession();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+
+  const handleAddToCart = async () => {
+    if (!session) {
+      toast.error("Please login to add items to cart.");
+      return;
+    }
+
+    try {
+      await addToCart(
+        {
+          product_id: product.id,
+          product_name: product.name,
+          price: product.price,
+          image_url: product.image_url,
+          quantity: quantity,
+        },
+        session.user.id
+      );
+      toast.success(`${quantity}x ${product.name} added to cart!`);
+    } catch (error) {
+      toast.error("Failed to add product to cart.");
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -54,11 +80,12 @@ export default function ProductDetailPage() {
 
   if (!product) return null;
 
-  const available = product.inventory?.available_quantity ?? 0;
+  // Use available_quantity if present, otherwise fallback to quantity, or 0
+  const available = product.inventory ? (product.inventory.available_quantity ?? product.inventory.quantity ?? 0) : 0;
   const isOutOfStock = available === 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-2 py-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
         <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -148,7 +175,7 @@ export default function ProductDetailPage() {
                 </button>
               </div>
               <button
-                onClick={() => toast.success(`${quantity}x ${product.name} added to cart!`)}
+                onClick={handleAddToCart}
                 className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
               >
                 <ShoppingCart className="w-5 h-5" />

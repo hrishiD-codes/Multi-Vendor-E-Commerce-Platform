@@ -41,4 +41,4 @@ EXPOSE 10000
 
 # Start-up script: run migrations then serve
 # PORT is injected by Render (default 10000); falls back to 8000 for local docker-compose
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]

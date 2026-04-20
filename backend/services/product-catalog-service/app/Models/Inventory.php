@@ -18,6 +18,11 @@ class Inventory extends Model
         'low_stock_threshold',
     ];
 
+    protected $appends = [
+        'available_quantity',
+        'is_low_stock',
+    ];
+
     protected $casts = [
         'quantity'            => 'integer',
         'reserved_quantity'   => 'integer',
@@ -35,14 +40,14 @@ class Inventory extends Model
      */
     public function getAvailableQuantityAttribute(): int
     {
-        return max(0, $this->quantity - $this->reserved_quantity);
+        return max(0, (int) ($this->quantity ?? 0) - (int) ($this->reserved_quantity ?? 0));
     }
 
     /**
      * Whether the product is low on stock.
      */
-    public function isLowStock(): bool
+    public function getIsLowStockAttribute(): bool
     {
-        return $this->available_quantity <= $this->low_stock_threshold;
+        return $this->available_quantity <= ($this->low_stock_threshold ?? 10);
     }
 }
