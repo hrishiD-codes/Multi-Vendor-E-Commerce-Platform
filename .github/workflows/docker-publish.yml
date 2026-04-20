@@ -284,8 +284,8 @@ jobs:
           script: |
             cd ~/Multi-Vendor-E-Commerce-Platform
             # Pull latest images from Docker Hub
-            sudo docker-compose pull
+            sudo docker compose pull
             # Start/Update containers in background
-            sudo docker-compose up -d --remove-orphans
+            sudo docker compose up -d --remove-orphans
             # Cleanup unused images to save disk space
             sudo docker image prune -f
